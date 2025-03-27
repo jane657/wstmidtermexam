@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Users</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+
+        h1 {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        h2 {
+            font-size: 28px;
+            margin-top: 0;
+            font-weight: normal;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px; 
+            width: 730px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .student-card {
+            display: flex; 
+            text-align: left; 
+            width: 100%;
+            padding: 2px;
+            border: 2px solid rgb(200, 200, 200);
+            background-color: #f9f9f9;
+            line-height: 1.8;
+            margin: 2px;
+        }
+
+        .student-card img {
+            width: 50px;
+            height: 50px;
+            border: 1px solid rgb(180, 180, 180);
+            object-fit: cover;
+        }
+
+        .student-info {
+            font-size: 12px;
+            flex: 1;
+            padding-left: 10px; 
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>ABC Colleges</h1>
+    <h2>Library Users</h2>
+
+    <div class="container" id="studentList"></div>
+
+    <script>
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                loadStudents(this);
+            }
+        };
+        xhttp.open("GET", "maryjane_palmes.xml", true);
+        xhttp.send();
+
+        function loadStudents(xml) {
+            var xmlDoc = xml.responseXML;
+            var students = xmlDoc.getElementsByTagName("student");
+            var output = "";
+
+            for (var i = 0; i < students.length; i++) {
+                var name = students[i].getElementsByTagName("name")[0].childNodes[0].nodeValue;
+                var course = students[i].getElementsByTagName("course")[0].childNodes[0].nodeValue;
+                var year = students[i].getElementsByTagName("year_level")[0].childNodes[0].nodeValue;
+                var adviser = students[i].getElementsByTagName("adviser")[0].childNodes[0].nodeValue;
+                var schoolYear = students[i].getElementsByTagName("school_year")[0].childNodes[0].nodeValue;
+
+                var imageTag = students[i].getElementsByTagName("picture")[0];
+                var imageSrc = imageTag ? imageTag.childNodes[0].nodeValue : "default.png"; 
+
+                output += "<div class='student-card'>";
+                output += "<div class='student-info'>"; 
+                output += "<span class='label'>Name:</span> " + name + "<br>"; 
+                output += "<span class='label'>Course:</span> " + course + "<br>";
+                output += "<span class='label'>Year Level / Section:</span> " + year + "<br>";
+                output += "<span class='label'>Adviser:</span> " + adviser + "<br>";
+                output += "<span class='label'>School Year:</span> " + schoolYear + "<br>";
+                output += "</div>";
+                output += "<img src='" + imageSrc + "' alt='Profile Picture'>"; 
+                output += "</div>";
+            }
+
+            document.getElementById("studentList").innerHTML = output;
+        }
+    </script>
+
+</body>
+</html>
